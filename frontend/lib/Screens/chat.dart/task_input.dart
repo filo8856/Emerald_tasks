@@ -1,14 +1,14 @@
 import 'dart:convert';
+import 'package:emerald_tasks/Auth.dart';
 import 'package:emerald_tasks/Screens/Constants/custom_theme.dart';
+import 'package:emerald_tasks/Screens/Login.dart';
 import 'package:emerald_tasks/Screens/chat.dart/task2.dart';
 import 'package:emerald_tasks/Screens/chat.dart/task_tile.dart';
 import 'package:emerald_tasks/data.dart';
 import 'package:emerald_tasks/models/task.dart';
 import 'package:firebase_ai/firebase_ai.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:http/http.dart' as http;
 
 class TaskInputScreen extends StatefulWidget {
   const TaskInputScreen({super.key});
@@ -18,6 +18,14 @@ class TaskInputScreen extends StatefulWidget {
 }
 
 class _TaskInputScreenState extends State<TaskInputScreen> {
+
+  void logOut() async{
+    await AuthService().signOut();
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => Login())
+    );
+  }
   final TextEditingController _controller = TextEditingController();
   List<Task> tasks = [];
   bool isLoading = false;
@@ -99,15 +107,12 @@ class _TaskInputScreenState extends State<TaskInputScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: CustomTheme.cardBackground,
+      drawer: Drawer(),
       appBar: AppBar(
-        leading: FloatingActionButton(
-          onPressed: () {
-            if(tasks.isNotEmpty)
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => Task2(tasks: tasks)),
-            );
-          },
+        leading: IconButton(
+          onPressed: logOut, 
+          icon: Icon(Icons.logout),
+          color: CustomTheme.borderGoldLight,
         ),
         centerTitle: true,
         backgroundColor: CustomTheme.cardBackground,
@@ -115,6 +120,18 @@ class _TaskInputScreenState extends State<TaskInputScreen> {
           "My Tasks",
           style: TextStyle(color: CustomTheme.primaryColor, fontSize: 30.r),
         ),
+        actions: [
+          FloatingActionButton(
+            onPressed: () {
+              if(tasks.isNotEmpty)
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => Task2(tasks: tasks)),
+                );
+              },
+              mini: true,
+        ),
+        ]
       ),
       body: Column(
         children: [

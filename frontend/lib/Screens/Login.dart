@@ -1,7 +1,6 @@
+import 'package:emerald_tasks/Screens/Constants/custom_theme.dart';
 import 'package:emerald_tasks/Screens/chat.dart/task_input.dart';
-import 'package:emerald_tasks/Screens/home.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../Auth.dart';
 
 class Login extends StatefulWidget {
@@ -34,17 +33,21 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    double h = MediaQuery.heightOf(context);
+    double w = MediaQuery.heightOf(context);
     return Scaffold(
+      backgroundColor: CustomTheme.cardBackground,
       body: SafeArea(
         child: Column(
           children: [
             const Spacer(),
 
-            const Text(
+            Text(
               "Welcome",
               style: TextStyle(
-                fontSize: 28,
+                fontSize: 0.04*h,
                 fontWeight: FontWeight.bold,
+                color: CustomTheme.primaryColor,
               ),
             ),
 
@@ -60,12 +63,40 @@ class _LoginState extends State<Login> {
 
             const Spacer(),
 
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+            //   child: SizedBox(
+            //     width: double.infinity,
+            //     height: 50,
+            //     style: ElevatedButton.styleFrom(
+            //       backgroundColor: Colors.green,
+            //     ),
+            //     child: ElevatedButton.icon(
+            //       onPressed: handleGoogleSignIn,
+            //       icon: Image.network(
+            //         "https://developers.google.com/identity/images/g-logo.png",
+            //         height: 24,
+            //       ),
+            //       label: const Text(
+            //         "Sign-In with Google",
+            //         style: TextStyle(fontSize: 16),
+            //       ),
+            //     ),
+            //   ),
+            // )
+
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
               child: SizedBox(
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: CustomTheme.textPrimary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12), // optional
+                    ),
+                  ),
                   onPressed: handleGoogleSignIn,
                   icon: Image.network(
                     "https://developers.google.com/identity/images/g-logo.png",
@@ -73,7 +104,10 @@ class _LoginState extends State<Login> {
                   ),
                   label: const Text(
                     "Sign-In with Google",
-                    style: TextStyle(fontSize: 16),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: CustomTheme.backgroundColor,
+                    ),
                   ),
                 ),
               ),
