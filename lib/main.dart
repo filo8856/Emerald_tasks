@@ -1,3 +1,6 @@
+import 'package:emerald_tasks/Screens/Constants/custom_theme.dart';
+import 'package:emerald_tasks/Screens/Login.dart';
+import 'package:emerald_tasks/Screens/chat.dart/task_input.dart';
 import 'package:emerald_tasks/Screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -22,7 +25,7 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Flutter Demo',
-          home: Home(),
+          home:TaskInputScreen(),
         );
       },
     );
