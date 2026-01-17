@@ -4,9 +4,17 @@ import 'package:emerald_tasks/Screens/chat.dart/task_input.dart';
 import 'package:emerald_tasks/Screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
-  WidgetsFlutterBinding.ensureInitialized();
+// ...
+
+
+void main() async{
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+);
+    WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 

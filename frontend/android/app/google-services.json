@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "275145323529",
+    "project_id": "emerald-tasks",
+    "storage_bucket": "emerald-tasks.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:275145323529:android:c7b432ee898fa0e46d74d8",
+        "android_client_info": {
+          "package_name": "com.example.emerald_tasks"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDl5NzhNreeiQVbCAGrw87aEd_mFfWI5p0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

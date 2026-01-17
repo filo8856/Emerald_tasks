@@ -24,48 +24,48 @@ class _TaskInputScreenState extends State<TaskInputScreen> {
     setState(() => isLoading = true);
 
     try {
-      final data = {
-        "tasks": [
-          {
-            "Title": "Finish ML Assignment",
-            "deadline": "2026-01-20T23:59:00",
-            "effort": 180,
-            "priority": "High",
-            "additional details": "Logistic regression + report submission",
-          },
-          {
-            "Title": "Go to Gym",
-            "deadline": null,
-            "effort": 60,
-            "priority": "Medium",
-            "additional details": "Strength + cardio workout",
-          },
-          {
-            "Title": "Call Parents",
-            "deadline": "2026-01-18T21:00:00",
-            "effort": 30,
-            "priority": "Low",
-            "additional details": "Weekly catch-up call",
-          },
-        ],
-      };
+      // final data = {
+      //   "tasks": [
+      //     {
+      //       "Title": "Finish ML Assignment",
+      //       "deadline": "2026-01-20T23:59:00",
+      //       "effort": 180,
+      //       "priority": "High",
+      //       "additional details": "Logistic regression + report submission",
+      //     },
+      //     {
+      //       "Title": "Go to Gym",
+      //       "deadline": null,
+      //       "effort": 60,
+      //       "priority": "Medium",
+      //       "additional details": "Strength + cardio workout",
+      //     },
+      //     {
+      //       "Title": "Call Parents",
+      //       "deadline": "2026-01-18T21:00:00",
+      //       "effort": 30,
+      //       "priority": "Low",
+      //       "additional details": "Weekly catch-up call",
+      //     },
+      //   ],
+      // };
 
-      // final uri = Uri.parse(
-      //   "https://api.example.com/parse-tasks", // 🔴 replace
-      // );
+      final uri = Uri.parse(
+        "https://emerald-ai-1.onrender.com/tasks/update", // 🔴 replace
+      );
 
-      // final response = await http.post(
-      //   uri,
-      //   headers: {"Content-Type": "application/json"},
-      //   body: jsonEncode({"input_text": _controller.text}),
-      // );
+      final response = await http.post(
+        uri,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"user_input": _controller.text,"tasks":tasks}),
+      );
 
-      // // ❗ Always check status code
-      // if (response.statusCode != 200) {
-      //   throw Exception("Server error: ${response.statusCode}");
-      // }
+      // ❗ Always check status code
+      if (response.statusCode != 200) {
+        throw Exception("Server error: ${response.statusCode}");
+      }
 
-      // final data = jsonDecode(response.body);
+      final data = jsonDecode(response.body);
       setState(() {
         tasks = (data["tasks"] as List).map((t) => Task.fromJson(t)).toList();
       });

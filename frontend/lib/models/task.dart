@@ -21,7 +21,7 @@ class Task {
     this.additionalDetails = '',
     this.deadline,
     this.effortMinutes,
-    this.priority = TaskPriority.medium,
+    this.priority = TaskPriority.low
   });
 
   /// ----------------------------
