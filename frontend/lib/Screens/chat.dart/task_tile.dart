@@ -2,7 +2,20 @@ import 'package:emerald_tasks/Screens/Constants/custom_theme.dart';
 import 'package:emerald_tasks/models/task.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 
+String formatDeadline(DateTime? dateTime) {
+  if (dateTime == null) return "No deadline";
+
+  final hasTime =
+      !(dateTime.hour == 0 && dateTime.minute == 0 && dateTime.second == 0);
+
+  if (hasTime) {
+    return DateFormat('dd MMM yyyy • hh:mm a').format(dateTime);
+  } else {
+    return DateFormat('dd MMM yyyy').format(dateTime);
+  }
+}
 class TaskTile extends StatelessWidget {
   final Task task;
 
@@ -23,7 +36,6 @@ class TaskTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
 
     return Container(
       margin: EdgeInsets.only(bottom: CustomTheme.spacingS),
@@ -54,18 +66,18 @@ class TaskTile extends StatelessWidget {
                   task.title,
                   style: TextStyle(
                         color: CustomTheme.primaryColor,
-                        fontSize: 15.w,
+                        fontSize: 15.r,
                       ),
                 ),
 
                 /// Additional details / dependencies
-                if (task.additionalDetails.isNotEmpty) ...[
+                if (task.dependency!=null) ...[
                   SizedBox(height: CustomTheme.spacingXS),
                   Text(
-                    task.additionalDetails,
+                    task.dependency!,
                     style: TextStyle(
                         color: CustomTheme.primaryColor,
-                        fontSize: 10.w,
+                        fontSize: 10.r,
                       ),
                   ),
                 ],
@@ -74,10 +86,10 @@ class TaskTile extends StatelessWidget {
                 if (task.deadline != null) ...[
                   SizedBox(height: CustomTheme.spacingXS),
                   Text(
-                    "Due: ${task.deadline!.toLocal().toString().split(' ')[0]}",
+                    formatDeadline(task.deadline),
                     style: TextStyle(
                         color: CustomTheme.primaryColor,
-                        fontSize: 10.w,
+                        fontSize: 10.r,
                       ),
                   ),
                 ],
