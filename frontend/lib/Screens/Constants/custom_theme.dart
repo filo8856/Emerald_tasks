@@ -1,6 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+String extractJson(String text) {
+  final start = text.indexOf('[');
+  final end = text.lastIndexOf(']');
+  if (start == -1 || end == -1) {
+    throw Exception("No JSON array found in response");
+  }
+  return text.substring(start, end + 1);
+}
+
 class CustomTheme {
   // Primary Brand Colors
   static const Color primaryGold = Color(0xFFFFD88E);

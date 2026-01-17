@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:emerald_tasks/Screens/Constants/custom_theme.dart';
 import 'package:emerald_tasks/Screens/chat.dart/task_tile.dart';
 import 'package:emerald_tasks/models/task.dart';
+import 'package:firebase_ai/firebase_ai.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http;
@@ -49,25 +51,85 @@ class _TaskInputScreenState extends State<TaskInputScreen> {
       //     },
       //   ],
       // };
+      final model = FirebaseAI.googleAI().generativeModel(
+        model: 'gemini-2.5-flash',
+      );
+      final existingTasks = tasks.map((t) => t.toJson()).toList();
+      String prompt =
+          '''
+You are a task state manager.
 
+Input:
+- existing_tasks: JSON array of tasks (may be empty), in this format
+- Each task must look like:
+{
+  "Title": "string",
+  "deadline": "ISO-8601 datetime or null",
+  "effort": number or null,
+  "priority": "High | Medium | Low",
+  "additional details": "string"
+}
+
+- user_input: natural language that may add multiple tasks, specify dependencies, or edit existing tasks.
+
+Output:
+Return the COMPLETE, UPDATED JSON array of tasks.
+
+Rules:
+1) PRESERVE STATE: The output array MUST include ALL tasks from 'existing_tasks' that were not modified,
+   PLUS any new or updated tasks. Do not drop existing tasks unless the user explicitly asks to delete them.
+2) Split multiple tasks into separate entries.
+3) If the user edits an existing task, update it by matching Title (case-insensitive).
+   If ambiguous, choose the closest match and mention ambiguity in "additional details".
+4) Put dependencies in "additional details" using: "Depends on: <Title1>, <Title2>".
+   Example:
+   user_input: "Email mentor after Finish PPT"
+   => Email mentor.additional details MUST include "Depends on: Finish PPT"
+5) deadline:
+   - deadline MUST always be full ISO-8601 datetime or null.
+  -  Never return date-only strings.
+
+   - If time is mentioned, use ISO 8601 string (include timezone if available).
+   - If missing, null.
+6) effort:
+   - Convert hours/minutes to integer minutes if possible (e.g., 1.5h -> 90).
+   - If missing, null.
+7) priority:
+   - If not given, infer: urgent deadlines -> High, otherwise Medium; trivial -> Low.
+
+CRITICAL OUTPUT RULES:
+- Output MUST be a single JSON array of task objects. No nesting. No extra wrapper keys.
+- Never output empty objects {}.
+- Keys MUST be exactly: "Title", "deadline", "effort", "priority", "additional details".
+- Deduplicate tasks by Title (case-insensitive). If duplicates occur, merge them into ONE task:
+  - Prefer values that are not null/empty.
+  - If priorities differ, choose the higher urgency: High > Medium > Low.
+  this is your ison:-
+  ${jsonEncode({"user_input": _controller.text, "tasks": existingTasks})}
+''';
       final uri = Uri.parse(
         "https://emerald-ai-1.onrender.com/tasks/update", // 🔴 replace
       );
 
-      final response = await http.post(
-        uri,
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({"user_input": _controller.text,"tasks":tasks}),
-      );
+      // final response = await http.post(
+      //   uri,
+      //   headers: {"Content-Type": "application/json"},
+      //   body: jsonEncode({"user_input": _controller.text, "tasks": tasks}),
+      // );
 
-      // ❗ Always check status code
-      if (response.statusCode != 200) {
-        throw Exception("Server error: ${response.statusCode}");
+      // // ❗ Always check status code
+      // if (response.statusCode != 200) {
+      //   throw Exception("Server error: ${response.statusCode}");
+      // }
+      final response = await model.generateContent([Content.text(prompt)]);
+      final rawText = response.text;
+      if (rawText == null) {
+        throw Exception("Empty response from Gemini");
       }
-
-      final data = jsonDecode(response.body);
+      final jsonText=extractJson(rawText);
+      final List decoded = jsonDecode(jsonText);
       setState(() {
-        tasks = (data["tasks"] as List).map((t) => Task.fromJson(t)).toList();
+        tasks = (decoded).map((t) => Task.fromJson(t)).toList();
       });
     } catch (e) {
       debugPrint(e.toString());
@@ -129,7 +191,7 @@ class _TaskInputScreenState extends State<TaskInputScreen> {
 
                   style: TextStyle(
                     color: CustomTheme.primaryColor,
-                    fontSize: 20.w,
+                    fontSize: 20.r,
                   ),
                   decoration: InputDecoration(
                     border: InputBorder.none, // 👈 removes underline
