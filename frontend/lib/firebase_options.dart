@@ -41,48 +41,51 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBbstKCDYgbF2do3g2RWeON1beqdCDx4dA',
-    appId: '1:275145323529:web:47c0db9573d1aa926d74d8',
-    messagingSenderId: '275145323529',
-    projectId: 'emerald-tasks',
-    authDomain: 'emerald-tasks.firebaseapp.com',
-    storageBucket: 'emerald-tasks.firebasestorage.app',
-    measurementId: 'G-N54JLWMV17',
+    apiKey: 'AIzaSyAMC3R6uF2jkfpgl9rK-BZvDHcf6V-3bQg',
+    appId: '1:784560926437:web:c6eac8f396fa566bdc2e0c',
+    messagingSenderId: '784560926437',
+    projectId: 'emerald-ai-b49af',
+    authDomain: 'emerald-ai-b49af.firebaseapp.com',
+    storageBucket: 'emerald-ai-b49af.firebasestorage.app',
+    measurementId: 'G-TR405TBE1K',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDl5NzhNreeiQVbCAGrw87aEd_mFfWI5p0',
-    appId: '1:275145323529:android:c7b432ee898fa0e46d74d8',
-    messagingSenderId: '275145323529',
-    projectId: 'emerald-tasks',
-    storageBucket: 'emerald-tasks.firebasestorage.app',
+    apiKey: 'AIzaSyCbx9wvwsL6M4x5c4SJJhyPfCUSoUzFYBw',
+    appId: '1:784560926437:android:5a80eeee3ff09aafdc2e0c',
+    messagingSenderId: '784560926437',
+    projectId: 'emerald-ai-b49af',
+    storageBucket: 'emerald-ai-b49af.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDLiYiz7jA0kiVxaUtNXS0f3fJFmKSZ-3o',
-    appId: '1:275145323529:ios:f18a1330c709c5ad6d74d8',
-    messagingSenderId: '275145323529',
-    projectId: 'emerald-tasks',
-    storageBucket: 'emerald-tasks.firebasestorage.app',
+    apiKey: 'AIzaSyD5Gmyr3938p36Fa9YGVFt5WGNLKaQ-VMg',
+    appId: '1:784560926437:ios:e222ee8181f32c77dc2e0c',
+    messagingSenderId: '784560926437',
+    projectId: 'emerald-ai-b49af',
+    storageBucket: 'emerald-ai-b49af.firebasestorage.app',
+    iosClientId: '784560926437-mto7e659srqq22sceop5sq53cenknlso.apps.googleusercontent.com',
     iosBundleId: 'com.example.emeraldTasks',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyDLiYiz7jA0kiVxaUtNXS0f3fJFmKSZ-3o',
-    appId: '1:275145323529:ios:f18a1330c709c5ad6d74d8',
-    messagingSenderId: '275145323529',
-    projectId: 'emerald-tasks',
-    storageBucket: 'emerald-tasks.firebasestorage.app',
+    apiKey: 'AIzaSyD5Gmyr3938p36Fa9YGVFt5WGNLKaQ-VMg',
+    appId: '1:784560926437:ios:e222ee8181f32c77dc2e0c',
+    messagingSenderId: '784560926437',
+    projectId: 'emerald-ai-b49af',
+    storageBucket: 'emerald-ai-b49af.firebasestorage.app',
+    iosClientId: '784560926437-mto7e659srqq22sceop5sq53cenknlso.apps.googleusercontent.com',
     iosBundleId: 'com.example.emeraldTasks',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyBbstKCDYgbF2do3g2RWeON1beqdCDx4dA',
-    appId: '1:275145323529:web:0ac9ea94760d958f6d74d8',
-    messagingSenderId: '275145323529',
-    projectId: 'emerald-tasks',
-    authDomain: 'emerald-tasks.firebaseapp.com',
-    storageBucket: 'emerald-tasks.firebasestorage.app',
-    measurementId: 'G-3LB6GNFHSH',
+    apiKey: 'AIzaSyAMC3R6uF2jkfpgl9rK-BZvDHcf6V-3bQg',
+    appId: '1:784560926437:web:d3ba1c8d264f023cdc2e0c',
+    messagingSenderId: '784560926437',
+    projectId: 'emerald-ai-b49af',
+    authDomain: 'emerald-ai-b49af.firebaseapp.com',
+    storageBucket: 'emerald-ai-b49af.firebasestorage.app',
+    measurementId: 'G-WNMS90VB4Z',
   );
+
 }
