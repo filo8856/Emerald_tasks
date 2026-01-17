@@ -6,31 +6,64 @@ import 'package:flutter/material.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: [
+      'https://www.googleapis.com/auth/calendar',
+    ],
+  );
 
-  Future<User?> signInWithGoogle() async {
-    try {
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+  // Future<User?> signInWithGoogle() async {
+  //   try {
+  //     final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
 
-      if (googleUser == null) return null; // user cancelled
+  //     if (googleUser == null) return null; // user cancelled
 
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+  //     final GoogleSignInAuthentication googleAuth =
+  //         await googleUser.authentication;
 
-      final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
+  //     final AuthCredential credential = GoogleAuthProvider.credential(
+  //       accessToken: googleAuth.accessToken,
+  //       idToken: googleAuth.idToken,
+  //     );
 
-      UserCredential userCredential =
-          await _auth.signInWithCredential(credential);
+  //     UserCredential userCredential =
+  //         await _auth.signInWithCredential(credential);
 
-      return userCredential.user;
-    } catch (e) {
-      print("Google sign-in failed: $e");
-      return null;
-    }
+  //     return userCredential.user;
+  //   } catch (e) {
+  //     print("Google sign-in failed: $e");
+  //     return null;
+  //   }
+  // }
+
+  Future<Map<String, dynamic>?> signInWithGoogle() async {
+  try {
+    final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+
+    if (googleUser == null) return null; // User cancelled
+
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
+
+    final AuthCredential credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    UserCredential userCredential =
+        await _auth.signInWithCredential(credential);
+
+    return {
+      "user": userCredential.user,
+      "token": googleAuth.accessToken, // <-- Needed for Google Calendar API
+    };
+
+  } catch (e) {
+    print("Google sign-in failed: $e");
+    return null;
   }
+}
+
 
   Future<void> signOut() async {
     await _googleSignIn.signOut();
