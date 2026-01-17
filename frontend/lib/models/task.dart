@@ -8,6 +8,7 @@ class Task {
   final String additionalDetails;
 
   /// Optional deadline
+  final String? dependency;
   final DateTime? deadline;
 
   /// Estimated effort in minutes
@@ -18,10 +19,11 @@ class Task {
 
   Task({
     required this.title,
+    this.dependency,
     this.additionalDetails = '',
     this.deadline,
     this.effortMinutes,
-    this.priority = TaskPriority.low
+    this.priority = TaskPriority.low,
   });
 
   /// ----------------------------
@@ -30,6 +32,7 @@ class Task {
   factory Task.fromJson(Map<String, dynamic> json) {
     return Task(
       title: json["Title"],
+      dependency:json["dependency"],
       additionalDetails: json["additional details"] ?? '',
       deadline: json["deadline"] != null
           ? DateTime.parse(json["deadline"])
@@ -45,6 +48,7 @@ class Task {
   Map<String, dynamic> toJson() {
     return {
       "Title": title,
+      "dependency":dependency,
       "deadline": deadline?.toIso8601String(),
       "effort": effortMinutes,
       "priority": priority.name[0].toUpperCase() + priority.name.substring(1),

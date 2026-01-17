@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:emerald_tasks/Screens/Constants/custom_theme.dart';
-import 'package:emerald_tasks/Screens/chat.dart/task2.dart';
 import 'package:emerald_tasks/Screens/chat.dart/task_tile.dart';
 import 'package:emerald_tasks/data.dart';
 import 'package:emerald_tasks/models/task.dart';
@@ -10,70 +9,37 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http;
 
-class TaskInputScreen extends StatefulWidget {
-  const TaskInputScreen({super.key});
+class Task2 extends StatefulWidget {
+  final List<Task> tasks;
+  const Task2({super.key, required this.tasks});
 
   @override
-  State<TaskInputScreen> createState() => _TaskInputScreenState();
+  State<Task2> createState() => _Task2State();
 }
 
-class _TaskInputScreenState extends State<TaskInputScreen> {
-  final TextEditingController _controller = TextEditingController();
+class _Task2State extends State<Task2> {
   List<Task> tasks = [];
+  @override
+  void initState() {
+    tasks = widget.tasks;
+    generateTasks();
+    super.initState();
+  }
+
+  final TextEditingController _controller = TextEditingController();
   bool isLoading = false;
 
   Future<void> generateTasks() async {
-    if (_controller.text.trim().isEmpty) return;
-
     setState(() => isLoading = true);
 
     try {
-      // final data = {
-      //   "tasks": [
-      //     {
-      //       "Title": "Finish ML Assignment",
-      //       "deadline": "2026-01-20T23:59:00",
-      //       "effort": 180,
-      //       "priority": "High",
-      //       "additional details": "Logistic regression + report submission",
-      //     },
-      //     {
-      //       "Title": "Go to Gym",
-      //       "deadline": null,
-      //       "effort": 60,
-      //       "priority": "Medium",
-      //       "additional details": "Strength + cardio workout",
-      //     },
-      //     {
-      //       "Title": "Call Parents",
-      //       "deadline": "2026-01-18T21:00:00",
-      //       "effort": 30,
-      //       "priority": "Low",
-      //       "additional details": "Weekly catch-up call",
-      //     },
-      //   ],
-      // };
       final model = FirebaseAI.googleAI().generativeModel(
         model: 'gemini-2.5-flash',
       );
       final existingTasks = tasks.map((t) => t.toJson()).toList();
-      // final uri = Uri.parse(
-      //   "https://emerald-ai-1.onrender.com/tasks/update", // 🔴 replace
-      // );
-
-      // final response = await http.post(
-      //   uri,
-      //   headers: {"Content-Type": "application/json"},
-      //   body: jsonEncode({"user_input": _controller.text, "tasks": tasks}),
-      // );
-
-      // // ❗ Always check status code
-      // if (response.statusCode != 200) {
-      //   throw Exception("Server error: ${response.statusCode}");
-      // }
       final response = await model.generateContent([
         Content.text(
-          prompt1 +
+          prompt2 +
               jsonEncode({
                 "user_input": _controller.text,
                 "tasks": existingTasks,
@@ -84,9 +50,21 @@ class _TaskInputScreenState extends State<TaskInputScreen> {
       if (rawText == null) {
         throw Exception("Empty response from Gemini");
       }
-      final List decoded = jsonDecode(extractJson(rawText));
+      final cleaned = extractJson(rawText);
+      final Map<String, dynamic> decoded = jsonDecode(cleaned);
+
+      final List<Task> updatedTasks = (decoded['tasks'] as List)
+          .map((t) => Task.fromJson(t))
+          .toList();
+
+      final bool done = decoded['done'] == true;
+      final List questions = decoded['questions'] ?? [];
+      
+
+      if (!mounted) return;
+
       setState(() {
-        tasks = (decoded).map((t) => Task.fromJson(t)).toList();
+        tasks = updatedTasks;
       });
     } catch (e) {
       debugPrint(e.toString());
@@ -100,19 +78,10 @@ class _TaskInputScreenState extends State<TaskInputScreen> {
     return Scaffold(
       backgroundColor: CustomTheme.cardBackground,
       appBar: AppBar(
-        leading: FloatingActionButton(
-          onPressed: () {
-            if(tasks.isNotEmpty)
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => Task2(tasks: tasks)),
-            );
-          },
-        ),
         centerTitle: true,
         backgroundColor: CustomTheme.cardBackground,
         title: Text(
-          "My Tasks",
+          "Missing",
           style: TextStyle(color: CustomTheme.primaryColor, fontSize: 30.r),
         ),
       ),
@@ -164,7 +133,7 @@ class _TaskInputScreenState extends State<TaskInputScreen> {
                     enabledBorder:
                         InputBorder.none, // 👈 removes when not focused
                     focusedBorder: InputBorder.none,
-                    hintText: "Describe your tasks naturally...",
+                    hintText: "Answer questions...",
                     hintStyle: TextStyle(
                       color: CustomTheme.primaryColor,
                       fontSize: 20.r,
@@ -198,7 +167,7 @@ class _TaskInputScreenState extends State<TaskInputScreen> {
                             ),
                           )
                         : Text(
-                            "Generate Tasks",
+                            "Recheck tasks",
                             style: TextStyle(
                               color: CustomTheme.primaryColor,
                               fontSize: 20.r,
@@ -216,10 +185,19 @@ class _TaskInputScreenState extends State<TaskInputScreen> {
 }
 
 String extractJson(String text) {
-  final start = text.indexOf('[');
-  final end = text.lastIndexOf(']');
-  if (start == -1 || end == -1) {
-    throw Exception("No JSON array found in response");
+  text = text.replaceAll(RegExp(r'```json|```'), '');
+
+  final firstBrace = text.indexOf('{');
+  final lastBrace = text.lastIndexOf('}');
+
+  if (firstBrace == -1 || lastBrace == -1) {
+    throw FormatException("No JSON object found");
   }
-  return text.substring(start, end + 1);
+
+  var json = text.substring(firstBrace, lastBrace + 1);
+
+  // Remove trailing commas
+  json = json.replaceAll(RegExp(r',\s*([\]}])'), r'$1');
+
+  return json;
 }
