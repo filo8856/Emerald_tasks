@@ -11,10 +11,11 @@ import 'firebase_options.dart';
 
 
 void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
 );
-    WidgetsFlutterBinding.ensureInitialized();
+    
   runApp(const MyApp());
 }
 
@@ -33,7 +34,8 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Flutter Demo',
-          home:TaskInputScreen(),
+          //home:TaskInputScreen(),
+          home: Login(),
         );
       },
     );
