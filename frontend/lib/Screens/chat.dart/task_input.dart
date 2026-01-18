@@ -122,6 +122,10 @@ class _TaskInputScreenState extends State<TaskInputScreen> {
     // } finally {
     //   setState(() => isLoading = false);
     // }
+    _controller.clear();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FocusManager.instance.primaryFocus?.unfocus();
+    });
   }
 
   @override
@@ -143,9 +147,12 @@ class _TaskInputScreenState extends State<TaskInputScreen> {
         ),
         actions: [
           FloatingActionButton(
-            elevation:0.0,
+            elevation: 0.0,
             backgroundColor: CustomTheme.cardBackground,
-            child:Icon(Icons.question_mark_rounded,color: CustomTheme.primaryColor),
+            child: Icon(
+              Icons.question_mark_rounded,
+              color: CustomTheme.primaryColor,
+            ),
             onPressed: () {
               if (tasks.isNotEmpty)
                 Navigator.push(
@@ -235,7 +242,7 @@ class _TaskInputScreenState extends State<TaskInputScreen> {
                             width: 18.h,
                             child: const CircularProgressIndicator(
                               strokeWidth: 2,
-                              color: CustomTheme.primaryColor
+                              color: CustomTheme.primaryColor,
                             ),
                           )
                         : Text(

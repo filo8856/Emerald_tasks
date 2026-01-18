@@ -140,6 +140,10 @@ class _Task2State extends State<Task2> {
     if (!checked) {
       showQuestionsPopup(context, currentQuestions!);
     }
+    _controller.clear();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FocusManager.instance.primaryFocus?.unfocus();
+    });
   }
 
   @override
@@ -161,12 +165,14 @@ class _Task2State extends State<Task2> {
         ),
         actions: [
           FloatingActionButton(
-            elevation:0.0,
+            elevation: 0.0,
             backgroundColor: CustomTheme.cardBackground,
-            child:Icon(Icons.question_mark_rounded,color: CustomTheme.primaryColor),
+            child: Icon(
+              Icons.question_mark_rounded,
+              color: CustomTheme.primaryColor,
+            ),
             onPressed: () {
-              if (!checked)
-              {
+              if (!checked) {
                 showQuestionsPopup(context, currentQuestions!);
               }
             },
