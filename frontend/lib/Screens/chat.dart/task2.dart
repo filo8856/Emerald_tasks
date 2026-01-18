@@ -155,7 +155,7 @@ class _Task2State extends State<Task2> {
       drawer: Drawer(),
       appBar: AppBar(
         leading: IconButton(
-          onPressed: logOut,
+          onPressed: isLoading ? null : logOut,
           icon: Icon(Icons.logout),
           iconSize: 40.r,
           color: CustomTheme.borderGoldLight,
@@ -163,7 +163,7 @@ class _Task2State extends State<Task2> {
         centerTitle: true,
         backgroundColor: CustomTheme.cardBackground,
         title: Text(
-          "Null check",
+          "Review",
           style: TextStyle(color: CustomTheme.primaryColor, fontSize: 30.r),
         ),
         actions: [
@@ -176,7 +176,7 @@ class _Task2State extends State<Task2> {
               color: CustomTheme.primaryColor,
             ),
             onPressed: () {
-              if (!checked) {
+              if (!checked && !isLoading) {
                 showQuestionsPopup(context, currentQuestions!);
               }
             },
@@ -222,7 +222,7 @@ class _Task2State extends State<Task2> {
                 TextField(
                   controller: _controller,
                   maxLines: 3,
-
+                  enabled: !isLoading,
                   style: TextStyle(
                     color: CustomTheme.primaryColor,
                     fontSize: 20.r,
@@ -270,9 +270,11 @@ class _Task2State extends State<Task2> {
                                 if (reasoning != null && reasoning.isNotEmpty) {
                                   Navigator.pushReplacement(
                                     context,
-                                    MaterialPageRoute(
-                                      builder: (_) =>
+                                    PageRouteBuilder(
+                                      pageBuilder: (_, __, ___) =>
                                           ReasoningScreen(reasoning: reasoning),
+                                      transitionDuration: Duration.zero,
+                                      reverseTransitionDuration: Duration.zero,
                                     ),
                                   );
                                 }

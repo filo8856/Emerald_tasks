@@ -168,8 +168,8 @@ class _TaskInputScreenState extends State<TaskInputScreen> {
       drawer: Drawer(),
       appBar: AppBar(
         leading: IconButton(
-          onPressed: logOut,
-          iconSize:40.r,
+          onPressed: isLoading ? null : logOut,
+          iconSize: 40.r,
           icon: Icon(Icons.logout),
           color: CustomTheme.borderGoldLight,
         ),
@@ -189,10 +189,14 @@ class _TaskInputScreenState extends State<TaskInputScreen> {
               color: CustomTheme.primaryColor,
             ),
             onPressed: () {
-              if (tasks.isNotEmpty)
+              if (tasks.isNotEmpty && !isLoading)
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (_) => Task2(tasks: tasks)),
+                  PageRouteBuilder(
+                    pageBuilder: (_, __, ___) => Task2(tasks: tasks),
+                    transitionDuration: Duration.zero,
+                    reverseTransitionDuration: Duration.zero,
+                  ),
                 );
             },
             mini: true,
@@ -237,7 +241,7 @@ class _TaskInputScreenState extends State<TaskInputScreen> {
                 TextField(
                   controller: _controller,
                   maxLines: 3,
-
+                  enabled: !isLoading,
                   style: TextStyle(
                     color: CustomTheme.primaryColor,
                     fontSize: 20.r,

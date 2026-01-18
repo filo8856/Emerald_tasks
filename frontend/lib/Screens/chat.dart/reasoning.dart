@@ -40,7 +40,12 @@ class ReasoningScreen extends StatelessWidget {
             token = "";
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (_) => TaskInputScreen()),
+              PageRouteBuilder(
+                pageBuilder: (_, __, ___) =>
+                    TaskInputScreen(),
+                transitionDuration: Duration.zero,
+                reverseTransitionDuration: Duration.zero,
+              ),
             );
           },
         ),
