@@ -1,5 +1,6 @@
+import 'package:emerald_tasks/Screens/Constants/custom_theme.dart';
 import 'package:emerald_tasks/Screens/Login.dart';
-import 'package:emerald_tasks/Screens/home.dart';
+import 'package:emerald_tasks/Screens/chat.dart/task_input.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
@@ -7,10 +8,7 @@ import 'package:flutter/material.dart';
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: [
-      'email',
-      'https://www.googleapis.com/auth/calendar.events',
-    ],
+    scopes: ['email', 'https://www.googleapis.com/auth/calendar.events'],
   );
 
   // Future<User?> signInWithGoogle() async {
@@ -38,36 +36,35 @@ class AuthService {
   // }
 
   Future<Map<String, dynamic>?> signInWithGoogle() async {
-  try {
-    await _googleSignIn.signOut();
-    final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+    try {
+      //await _googleSignIn.signOut();
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
 
-    if (googleUser == null) return null; // User cancelled
+      if (googleUser == null) return null; // User cancelled
 
-    final GoogleSignInAuthentication googleAuth =
-        await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
 
-    //final String accessToken = googleAuth.accessToken!;
+      //final String accessToken = googleAuth.accessToken!;
 
-    final AuthCredential credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
 
-    UserCredential userCredential =
-        await _auth.signInWithCredential(credential);
+      UserCredential userCredential = await _auth.signInWithCredential(
+        credential,
+      );
 
-    return {
-      "user": userCredential.user,
-      "token": googleAuth.accessToken, // <-- Needed for Google Calendar API
-    };
-
-  } catch (e) {
-    print("Google sign-in failed: $e");
-    return null;
+      return {
+        "user": userCredential.user,
+        "token": googleAuth.accessToken, // <-- Needed for Google Calendar API
+      };
+    } catch (e) {
+      print("Google sign-in failed: $e");
+      return null;
+    }
   }
-}
-
 
   Future<void> signOut() async {
     await _googleSignIn.signOut();
@@ -83,12 +80,34 @@ class AuthGate extends StatelessWidget {
       builder: (context, snapshot) {
         // If user is logged in
         if (snapshot.hasData) {
-          return Home();
+          return TaskInputScreen();
         }
 
         // If user is not logged in
         return Login();
       },
     );
+  }
+}
+
+Future<void> getGoogleAccessTokenSilently() async {
+  try {
+    final GoogleSignIn googleSignIn = GoogleSignIn(
+      scopes: ['email', 'https://www.googleapis.com/auth/calendar.events'],
+    );
+
+    GoogleSignInAccount? account = await googleSignIn.signInSilently();
+
+    if (account == null) {
+      account = await googleSignIn.signIn(); // user not signed in
+    }
+
+    final GoogleSignInAuthentication auth = await account!.authentication;
+
+    token = auth.accessToken!;
+    print('gotten token'); // ✅ fresh access token
+  } catch (e) {
+    // silent failure is expected sometimes
+    return null;
   }
 }

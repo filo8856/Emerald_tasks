@@ -26,6 +26,7 @@ class _TaskInputScreenState extends State<TaskInputScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    getGoogleAccessTokenSilently();
     //_fetchCalendarEvents();
   }
 
@@ -168,6 +169,7 @@ class _TaskInputScreenState extends State<TaskInputScreen> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: logOut,
+          iconSize:40.r,
           icon: Icon(Icons.logout),
           color: CustomTheme.borderGoldLight,
         ),
@@ -182,12 +184,13 @@ class _TaskInputScreenState extends State<TaskInputScreen> {
             elevation: 0.0,
             backgroundColor: CustomTheme.cardBackground,
             child: Icon(
-              Icons.question_mark_rounded,
+              Icons.check,
+              size: 40.r,
               color: CustomTheme.primaryColor,
             ),
             onPressed: () {
               if (tasks.isNotEmpty)
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (_) => Task2(tasks: tasks)),
                 );

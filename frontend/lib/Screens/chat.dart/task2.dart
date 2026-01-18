@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:emerald_tasks/Auth.dart';
 import 'package:emerald_tasks/Screens/Constants/custom_theme.dart';
 import 'package:emerald_tasks/Screens/Login.dart';
+import 'package:emerald_tasks/Screens/chat.dart/reasoning.dart';
 import 'package:emerald_tasks/Screens/chat.dart/task2.dart';
 import 'package:emerald_tasks/Screens/chat.dart/task_tile.dart';
 import 'package:emerald_tasks/data.dart';
@@ -156,6 +157,7 @@ class _Task2State extends State<Task2> {
         leading: IconButton(
           onPressed: logOut,
           icon: Icon(Icons.logout),
+          iconSize: 40.r,
           color: CustomTheme.borderGoldLight,
         ),
         centerTitle: true,
@@ -170,6 +172,7 @@ class _Task2State extends State<Task2> {
             backgroundColor: CustomTheme.cardBackground,
             child: Icon(
               Icons.question_mark_rounded,
+              size: 40.r,
               color: CustomTheme.primaryColor,
             ),
             onPressed: () {
@@ -254,9 +257,32 @@ class _Task2State extends State<Task2> {
                     ),
                     onPressed: isLoading
                         ? null
-                        : () {
+                        : () async {
                             if (checked) {
-                              sendTasksAndCalendar(tasks);
+                              setState(() => isLoading = true);
+                              try {
+                                final reasoning = await sendTasksAndCalendar(
+                                  tasks,
+                                );
+
+                                if (!mounted) return;
+
+                                if (reasoning != null && reasoning.isNotEmpty) {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) =>
+                                          ReasoningScreen(reasoning: reasoning),
+                                    ),
+                                  );
+                                }
+                              } catch (e) {
+                                debugPrint(e.toString());
+                              } finally {
+                                if (mounted) {
+                                  setState(() => isLoading = false);
+                                }
+                              }
                             } else {
                               generateTasks();
                             }
@@ -304,7 +330,7 @@ List<Map<String, dynamic>> formatExistingEvents(
   }).toList();
 }
 
-Future<void> sendTasksAndCalendar(List<Task> tasks) async {
+Future<String?> sendTasksAndCalendar(List<Task> tasks) async {
   final events = await fetchNextWeekEvents(token);
   final formattedEvents = formatExistingEvents(events);
   final payload = {
@@ -333,10 +359,10 @@ Future<void> sendTasksAndCalendar(List<Task> tasks) async {
   final decoded = jsonDecode(response.body);
   debugPrint(decoded.toString());
   final List<Map<String, dynamic>> eventsToCreate =
-    (decoded["events_to_create"] as List)
-        .cast<Map<String, dynamic>>();
+      (decoded["events_to_create"] as List).cast<Map<String, dynamic>>();
   justEvents(token, eventsToCreate);
   //return jsonDecode(response.body);
+  return decoded["reasoning"] as String?;
 }
 
 String extractJson(String text) {
@@ -346,6 +372,61 @@ String extractJson(String text) {
     throw Exception("No JSON array found in response");
   }
   return text.substring(start, end + 1);
+}
+
+void showReasoningPopup(
+  BuildContext context,
+  String reasoning, {
+  Duration duration = const Duration(seconds: 10),
+}) {
+  showDialog(
+    context: context,
+    barrierColor: CustomTheme.cardBackground.withOpacity(0.85),
+    barrierDismissible: false,
+    builder: (context) {
+      // auto close after duration
+      Future.delayed(duration, () {
+        if (Navigator.of(context).canPop()) {
+          Navigator.of(context).pop();
+        }
+      });
+
+      // Split reasoning into readable lines
+      final lines = reasoning
+          .split('\n')
+          .where((line) => line.trim().isNotEmpty)
+          .take(5)
+          .toList();
+
+      return AlertDialog(
+        backgroundColor: CustomTheme.cardBackground,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Center(
+          child: Text(
+            "Why this schedule?",
+            style: TextStyle(
+              color: CustomTheme.primaryColor,
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: lines.map((line) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: Text(
+                "• ${line.replaceAll(RegExp(r'^\*+|\*+$'), '')}",
+                style: TextStyle(color: CustomTheme.primaryColor, fontSize: 14),
+              ),
+            );
+          }).toList(),
+        ),
+      );
+    },
+  );
 }
 
 void showQuestionsPopup(
