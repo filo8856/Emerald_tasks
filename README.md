@@ -239,3 +239,6 @@ This creates a smooth, intelligent workflow where the AI agent helps the user pl
 
 ---
 
+## Screenshots
+
+![Login Screen](screenshots/https://github.com/filo8856/Emerald_tasks/blob/main/screenshots/WhatsApp%20Image%202026-01-18%20at%2011.48.23%20PM.jpeg)
