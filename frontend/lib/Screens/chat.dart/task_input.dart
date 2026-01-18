@@ -9,6 +9,7 @@ import 'package:emerald_tasks/models/task.dart';
 import 'package:firebase_ai/firebase_ai.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:http/http.dart' as http;
 
 class TaskInputScreen extends StatefulWidget {
   const TaskInputScreen({super.key});
@@ -18,14 +19,14 @@ class TaskInputScreen extends StatefulWidget {
 }
 
 class _TaskInputScreenState extends State<TaskInputScreen> {
-
-  void logOut() async{
+  void logOut() async {
     await AuthService().signOut();
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => Login())
+      MaterialPageRoute(builder: (context) => Login()),
     );
   }
+
   final TextEditingController _controller = TextEditingController();
   List<Task> tasks = [];
   bool isLoading = false;
@@ -61,46 +62,66 @@ class _TaskInputScreenState extends State<TaskInputScreen> {
       //     },
       //   ],
       // };
-      final model = FirebaseAI.googleAI().generativeModel(
-        model: 'gemini-2.5-flash',
+      // final model = FirebaseAI.googleAI().generativeModel(
+      //   model: 'gemini-2.5-flash',
+      // );
+      //   final existingTasks = tasks.map((t) => t.toJson()).toList();
+      final uri = Uri.parse(
+        "https://emerald-ai-1.vercel.app/tasks/update", // 🔴 replace
       );
+
       final existingTasks = tasks.map((t) => t.toJson()).toList();
-      // final uri = Uri.parse(
-      //   "https://emerald-ai-1.onrender.com/tasks/update", // 🔴 replace
-      // );
+      final response = await http.post(
+        uri,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "user_input": _controller.text,
+          "tasks": existingTasks,
+        }),
+      );
 
-      // final response = await http.post(
-      //   uri,
-      //   headers: {"Content-Type": "application/json"},
-      //   body: jsonEncode({"user_input": _controller.text, "tasks": tasks}),
-      // );
-
-      // // ❗ Always check status code
-      // if (response.statusCode != 200) {
-      //   throw Exception("Server error: ${response.statusCode}");
-      // }
-      final response = await model.generateContent([
-        Content.text(
-          prompt1 +
-              jsonEncode({
-                "user_input": _controller.text,
-                "tasks": existingTasks,
-              }),
-        ),
-      ]);
-      final rawText = response.text;
-      if (rawText == null) {
-        throw Exception("Empty response from Gemini");
+      //   // ❗ Always check status code
+      if (response.statusCode != 200) {
+        throw Exception("Server error: ${response.statusCode}");
       }
-      final List decoded = jsonDecode(extractJson(rawText));
+      final Map<String, dynamic> decoded = jsonDecode(response.body);
+      print(decoded);
+      final List<Task> updatedTasks = (decoded['tasks'] as List)
+          .map((t) => Task.fromJson(t))
+          .toList();
+      if (!mounted) return;
+
       setState(() {
-        tasks = (decoded).map((t) => Task.fromJson(t)).toList();
+        tasks = updatedTasks;
       });
-    } catch (e) {
-      debugPrint(e.toString());
     } finally {
-      setState(() => isLoading = false);
+      if (mounted) {
+        setState(() => isLoading = false);
+      }
     }
+
+    //   final response = await model.generateContent([
+    //     Content.text(
+    //       prompt1 +
+    //           jsonEncode({
+    //             "user_input": _controller.text,
+    //             "tasks": existingTasks,
+    //           }),
+    //     ),
+    //   ]);
+    //   final rawText = response.text;
+    //   if (rawText == null) {
+    //     throw Exception("Empty response from Gemini");
+    //   }
+    //   final List decoded = jsonDecode(extractJson(rawText));
+    //   setState(() {
+    //     tasks = (decoded).map((t) => Task.fromJson(t)).toList();
+    //   });
+    // } catch (e) {
+    //   debugPrint(e.toString());
+    // } finally {
+    //   setState(() => isLoading = false);
+    // }
   }
 
   @override
@@ -110,7 +131,7 @@ class _TaskInputScreenState extends State<TaskInputScreen> {
       drawer: Drawer(),
       appBar: AppBar(
         leading: IconButton(
-          onPressed: logOut, 
+          onPressed: logOut,
           icon: Icon(Icons.logout),
           color: CustomTheme.borderGoldLight,
         ),
@@ -122,16 +143,19 @@ class _TaskInputScreenState extends State<TaskInputScreen> {
         ),
         actions: [
           FloatingActionButton(
+            elevation:0.0,
+            backgroundColor: CustomTheme.cardBackground,
+            child:Icon(Icons.question_mark_rounded,color: CustomTheme.primaryColor),
             onPressed: () {
-              if(tasks.isNotEmpty)
+              if (tasks.isNotEmpty)
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => Task2(tasks: tasks)),
                 );
-              },
-              mini: true,
-        ),
-        ]
+            },
+            mini: true,
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -211,7 +235,7 @@ class _TaskInputScreenState extends State<TaskInputScreen> {
                             width: 18.h,
                             child: const CircularProgressIndicator(
                               strokeWidth: 2,
-                              color: Colors.black,
+                              color: CustomTheme.primaryColor
                             ),
                           )
                         : Text(
