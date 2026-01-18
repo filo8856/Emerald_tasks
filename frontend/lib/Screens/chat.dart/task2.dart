@@ -5,6 +5,7 @@ import 'package:emerald_tasks/Screens/Login.dart';
 import 'package:emerald_tasks/Screens/chat.dart/task2.dart';
 import 'package:emerald_tasks/Screens/chat.dart/task_tile.dart';
 import 'package:emerald_tasks/data.dart';
+import 'package:emerald_tasks/models/createEventsInCalendar.dart';
 import 'package:emerald_tasks/models/task.dart';
 import 'package:firebase_ai/firebase_ai.dart';
 import 'package:flutter/material.dart';
@@ -264,7 +265,7 @@ class _Task2State extends State<Task2> {
                             ),
                           )
                         : Text(
-                            "Fill tasks",
+                            checked ? "Add Tasks" : "Fill tasks",
                             style: TextStyle(
                               color: CustomTheme.primaryColor,
                               fontSize: 20.r,
@@ -279,6 +280,53 @@ class _Task2State extends State<Task2> {
       ),
     );
   }
+}
+
+List<Map<String, dynamic>> formatExistingEvents(
+  List<Map<String, dynamic>> events,
+) {
+  return events.map((e) {
+    final start = e["start"];
+    final end = e["end"];
+
+    return {
+      "title": e["summary"],
+      "start": start["dateTime"] ?? start["date"],
+      "end": end["dateTime"] ?? end["date"],
+    };
+  }).toList();
+}
+
+Future<void> sendTasksAndCalendar(List<Task> tasks) async {
+  final events = await fetchNextWeekEvents(token);
+  final formattedEvents = formatExistingEvents(events);
+  final payload = {
+    "tasks": tasks.map((t) => t.toJson()).toList(),
+    "existing_events": formattedEvents,
+    "timezone": "Asia/Kolkata",
+    "work_start": "09:00",
+    "work_end": "18:00",
+    "lunch_start": "13:00",
+    "lunch_end": "14:00",
+    "break_minutes": 10,
+    "schedule_from": DateTime.now().toIso8601String(),
+  };
+
+  final response = await http.post(
+    Uri.parse("YOUR_API_URL_HERE"),
+    headers: {"Content-Type": "application/json"},
+    body: jsonEncode(payload),
+  );
+
+  if (response.statusCode != 200) {
+    throw Exception("API failed: ${response.statusCode}\n${response.body}");
+  }
+
+  // 5️⃣ Use backend response
+  final decoded = jsonDecode(response.body);
+  debugPrint(decoded.toString());
+  justEvents(token, decoded);
+  //return jsonDecode(response.body);
 }
 
 String extractJson(String text) {

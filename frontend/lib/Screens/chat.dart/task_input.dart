@@ -26,7 +26,7 @@ class _TaskInputScreenState extends State<TaskInputScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _fetchCalendarEvents();
+    //_fetchCalendarEvents();
   }
 
   Future<void> _fetchCalendarEvents() async {

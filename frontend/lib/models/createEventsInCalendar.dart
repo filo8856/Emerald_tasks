@@ -49,6 +49,19 @@ Future<void> createCalendarEvents(String accessToken, List<Task> tasks) async {
   }
 }
 
+Future<void> justEvents(String accessToken, Map<dynamic, dynamic> event) async {
+  final response = await http.post(
+    Uri.parse(
+      "https://www.googleapis.com/calendar/v3/calendars/primary/events",
+    ),
+    headers: {
+      "Authorization": "Bearer $accessToken",
+      "Content-Type": "application/json",
+    },
+    body: jsonEncode(event),
+  );
+}
+
 Future<List<Map<String, dynamic>>> fetchNextWeekEvents(
   String accessToken,
 ) async {
@@ -94,4 +107,3 @@ Future<List<Map<String, dynamic>>> fetchNextWeekEvents(
 
   return allEvents;
 }
-
