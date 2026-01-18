@@ -254,7 +254,14 @@ class _Task2State extends State<Task2> {
                     ),
                     onPressed: isLoading
                         ? null
-                        : (checked ? null : generateTasks),
+                        : () {
+                            if (checked) {
+                              sendTasksAndCalendar(tasks);
+                            } else {
+                              generateTasks();
+                            }
+                          },
+
                     child: isLoading
                         ? SizedBox(
                             height: 18.h,
@@ -313,7 +320,7 @@ Future<void> sendTasksAndCalendar(List<Task> tasks) async {
   };
 
   final response = await http.post(
-    Uri.parse("YOUR_API_URL_HERE"),
+    Uri.parse("https://emerald-ai-1.vercel.app/schedule/plan"),
     headers: {"Content-Type": "application/json"},
     body: jsonEncode(payload),
   );
@@ -325,7 +332,10 @@ Future<void> sendTasksAndCalendar(List<Task> tasks) async {
   // 5️⃣ Use backend response
   final decoded = jsonDecode(response.body);
   debugPrint(decoded.toString());
-  justEvents(token, decoded);
+  final List<Map<String, dynamic>> eventsToCreate =
+    (decoded["events_to_create"] as List)
+        .cast<Map<String, dynamic>>();
+  justEvents(token, eventsToCreate);
   //return jsonDecode(response.body);
 }
 
