@@ -55,111 +55,112 @@ class _TaskTileState extends State<TaskTile> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          show = !show;
-        });
-        print('show');
-      },
-      child: Container(
-        margin: EdgeInsets.only(bottom: CustomTheme.spacingS),
-        padding: EdgeInsets.all(CustomTheme.spacingM),
-        decoration: CustomTheme.cardDecoration,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            /// Priority indicator dot
-            Container(
-              margin: EdgeInsets.only(top: 6.h),
-              width: 8.w,
-              height: 8.w,
-              decoration: BoxDecoration(
-                color: getPriorityColor(widget.task.priority),
-                shape: BoxShape.circle,
-              ),
+    return Container(
+      margin: EdgeInsets.only(bottom: CustomTheme.spacingS),
+      // padding: EdgeInsets.all(CustomTheme.spacingM),
+      padding: EdgeInsets.fromLTRB(5.w, 5.h, 5.w, 5.h),
+      decoration: CustomTheme.cardDecoration,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          /// Priority indicator dot
+          Container(
+            margin: EdgeInsets.only(top: 6.h),
+            width: 8.w,
+            height: 8.w,
+            decoration: BoxDecoration(
+              color: getPriorityColor(widget.task.priority),
+              shape: BoxShape.circle,
             ),
-            SizedBox(width: CustomTheme.spacingM),
+          ),
+          SizedBox(width: CustomTheme.spacingM),
 
-            /// Task content
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  /// Title + priority label
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          widget.task.title,
-                          style: TextStyle(
-                            color: CustomTheme.primaryColor,
-                            fontSize: 15.r,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                      Text(
-                        priorityLabel(widget.task.priority),
+          /// Task content
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                /// Title + priority label
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        widget.task.title,
                         style: TextStyle(
-                          color: getPriorityColor(widget.task.priority),
-                          fontSize: 10.r,
-                          fontWeight: FontWeight.bold,
+                          color: CustomTheme.primaryColor,
+                          fontSize: 15.r,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
-                    ],
+                    ),
+                    Text(
+                      priorityLabel(widget.task.priority),
+                      style: TextStyle(
+                        color: getPriorityColor(widget.task.priority),
+                        fontSize: 15.r,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          show = !show;
+                        });
+                      },
+                      icon: Icon(Icons.arrow_drop_down,color: CustomTheme.primaryColor),
+                    ),
+                  ],
+                ),
+
+                /// Dependency
+                if (widget.task.dependencies.isNotEmpty) ...[
+                  SizedBox(height: CustomTheme.spacingXS),
+                  Text(
+                    "Depends on: ${widget.task.dependencies.join(', ')}",
+                    style: TextStyle(
+                      color: CustomTheme.primaryColor.withOpacity(0.8),
+                      fontSize: 10.r,
+                    ),
                   ),
-
-                  /// Dependency
-                  if (widget.task.dependency != null) ...[
-                    SizedBox(height: CustomTheme.spacingXS),
-                    Text(
-                      "Depends on: ${widget.task.dependency}",
-                      style: TextStyle(
-                        color: CustomTheme.primaryColor.withOpacity(0.8),
-                        fontSize: 10.r,
-                      ),
-                    ),
-                  ],
-
-                  /// Deadline
-                  if (widget.task.deadline != null) ...[
-                    SizedBox(height: CustomTheme.spacingXS),
-                    Text(
-                      "Deadline: ${formatDeadline(widget.task.deadline)}",
-                      style: TextStyle(
-                        color: CustomTheme.primaryColor,
-                        fontSize: 10.r,
-                      ),
-                    ),
-                  ],
-
-                  /// Effort
-                  if (widget.task.effortMinutes != null) ...[
-                    SizedBox(height: CustomTheme.spacingXS),
-                    Text(
-                      formatEffort(widget.task.effortMinutes),
-                      style: TextStyle(
-                        color: CustomTheme.primaryColor,
-                        fontSize: 10.r,
-                      ),
-                    ),
-                  ],
-                  if (show == true) ...[
-                    SizedBox(height: CustomTheme.spacingXS),
-                    Text(
-                      "Additional details: ${widget.task.additionalDetails}",
-                      style: TextStyle(
-                        color: CustomTheme.primaryColor,
-                        fontSize: 10.r,
-                      ),
-                    ),
-                  ],
                 ],
-              ),
+
+                /// Deadline
+                if (widget.task.deadline != null) ...[
+                  SizedBox(height: CustomTheme.spacingXS),
+                  Text(
+                    "Deadline: ${formatDeadline(widget.task.deadline)}",
+                    style: TextStyle(
+                      color: CustomTheme.primaryColor,
+                      fontSize: 10.r,
+                    ),
+                  ),
+                ],
+
+                /// Effort
+                if (widget.task.effortMinutes != null) ...[
+                  SizedBox(height: CustomTheme.spacingXS),
+                  Text(
+                    formatEffort(widget.task.effortMinutes),
+                    style: TextStyle(
+                      color: CustomTheme.primaryColor,
+                      fontSize: 10.r,
+                    ),
+                  ),
+                ],
+                if (show == true) ...[
+                  SizedBox(height: CustomTheme.spacingXS),
+                  Text(
+                    "Additional details: ${widget.task.additionalDetails}",
+                    style: TextStyle(
+                      color: CustomTheme.primaryColor,
+                      fontSize: 10.r,
+                    ),
+                  ),
+                ],
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -8,7 +8,7 @@ class Task {
   final String additionalDetails;
 
   /// Optional deadline
-  final String? dependency;
+  final List<String> dependencies;
   final DateTime? deadline;
 
   /// Estimated effort in minutes
@@ -19,7 +19,7 @@ class Task {
 
   Task({
     required this.title,
-    this.dependency,
+    this.dependencies = const [],
     this.additionalDetails = '',
     this.deadline,
     this.effortMinutes,
@@ -32,7 +32,9 @@ class Task {
   factory Task.fromJson(Map<String, dynamic> json) {
     return Task(
       title: json["Title"],
-      dependency:json["dependency"],
+      dependencies: json["dependencies"] == null
+        ? []
+        : List<String>.from(json["dependencies"]),
       additionalDetails: json["additional details"] ?? '',
       deadline: json["deadline"] != null
           ? DateTime.parse(json["deadline"])
@@ -48,7 +50,7 @@ class Task {
   Map<String, dynamic> toJson() {
     return {
       "Title": title,
-      "dependency":dependency,
+      "dependencies": dependencies,
       "deadline": deadline?.toIso8601String(),
       "effort": effortMinutes,
       "priority": priority.name[0].toUpperCase() + priority.name.substring(1),

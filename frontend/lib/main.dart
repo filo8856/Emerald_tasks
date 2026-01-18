@@ -9,7 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
-// ...
+// ... 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,8 +29,8 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Flutter Demo',
-          home: TaskInputScreen(),
-          //home: Login(),
+          // home: TaskInputScreen(),
+          home: Login(),
           //home: Home(),
           //home: Task2(tasks: [])
           //home: TaskTile(task: task),
