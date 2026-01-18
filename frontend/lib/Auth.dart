@@ -8,7 +8,8 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: [
-      'https://www.googleapis.com/auth/calendar',
+      'email',
+      'https://www.googleapis.com/auth/calendar.events',
     ],
   );
 
@@ -38,12 +39,15 @@ class AuthService {
 
   Future<Map<String, dynamic>?> signInWithGoogle() async {
   try {
+    await _googleSignIn.signOut();
     final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
 
     if (googleUser == null) return null; // User cancelled
 
     final GoogleSignInAuthentication googleAuth =
         await googleUser.authentication;
+
+    //final String accessToken = googleAuth.accessToken!;
 
     final AuthCredential credential = GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
