@@ -16,17 +16,22 @@ String priorityLabel(TaskPriority priority) {
   return priority.name[0].toUpperCase() + priority.name.substring(1);
 }
 
+// String formatDeadline(DateTime? dateTime) {
+//   if (dateTime == null) return "No deadline";
+
+//   final hasTime =
+//       !(dateTime.hour == 0 && dateTime.minute == 0 && dateTime.second == 0);
+
+//   if (hasTime) {
+//     return DateFormat('dd MMM yyyy • hh:mm a').format(dateTime);
+//   } else {
+//     return DateFormat('dd MMM yyyy').format(dateTime);
+//   }
+// }
 String formatDeadline(DateTime? dateTime) {
   if (dateTime == null) return "No deadline";
 
-  final hasTime =
-      !(dateTime.hour == 0 && dateTime.minute == 0 && dateTime.second == 0);
-
-  if (hasTime) {
-    return DateFormat('dd MMM yyyy • hh:mm a').format(dateTime);
-  } else {
-    return DateFormat('dd MMM yyyy').format(dateTime);
-  }
+  return DateFormat('dd MMM yyyy').format(dateTime);
 }
 
 class TaskTile extends StatefulWidget {
