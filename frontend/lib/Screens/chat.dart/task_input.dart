@@ -5,6 +5,7 @@ import 'package:emerald_tasks/Screens/Login.dart';
 import 'package:emerald_tasks/Screens/chat.dart/task2.dart';
 import 'package:emerald_tasks/Screens/chat.dart/task_tile.dart';
 import 'package:emerald_tasks/data.dart';
+import 'package:emerald_tasks/models/createEventsInCalendar.dart';
 import 'package:emerald_tasks/models/task.dart';
 import 'package:firebase_ai/firebase_ai.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,37 @@ class TaskInputScreen extends StatefulWidget {
 }
 
 class _TaskInputScreenState extends State<TaskInputScreen> {
+  List<Map<String, dynamic>> calendarEvents = [];
+  bool isLoadingCalendar = true;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _fetchCalendarEvents();
+  }
+
+  Future<void> _fetchCalendarEvents() async {
+    try {
+      final events = await fetchNextWeekEvents(token);
+
+      if (!mounted) return; // safety check
+
+      setState(() {
+        calendarEvents = events;
+        isLoadingCalendar = false;
+      });
+      debugPrint(calendarEvents.toString());
+    } catch (e) {
+      debugPrint("Failed to fetch calendar events: $e");
+
+      if (!mounted) return;
+
+      setState(() {
+        isLoadingCalendar = false;
+      });
+    }
+  }
+
   void logOut() async {
     await AuthService().signOut();
     Navigator.pushReplacement(

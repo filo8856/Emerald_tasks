@@ -1,33 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+String token="";
+
 class CustomTheme {
   // Primary Brand Colors
   static const Color primaryGold = Color(0xFFFFD88E);
   static const Color primaryGoldLight = Color(0xFFFFD994);
   static const Color primaryGoldDark = Color(0xFFDAA950);
   static const Color primaryGoldAccent = Color(0xFFEDD19F);
-  
+
   // Background Colors
   static const Color backgroundColor = Colors.black;
   static const Color cardBackground = Color(0xFF171717);
   static const Color cardBackgroundTransparent = Color(0xFF171717);
-  
+
   // Text Colors
   static const Color textPrimary = Colors.white;
   static const Color textSecondary = Colors.white70;
   static const Color textGold = Color(0xFFFFD88E);
   static const Color textGoldLight = Color(0xFFFFD994);
-  
+
   // Border Colors
   static const Color borderGold = Color(0xFFFFD88E);
   static const Color borderGoldLight = Color(0xFFFFD994);
-  
+
   // Status Colors
   static const Color successColor = Color(0xFF02C17E);
   static const Color errorColor = Color(0xFFC73C3C);
   static const Color warningColor = Color(0xFFFFA726);
-  
+
   // Legacy colors for compatibility
   static const Color primaryColor = primaryGold;
   static const Color cardColor = cardBackground;
@@ -42,32 +44,32 @@ class CustomTheme {
   static double get spacingL => 24.0.h;
   static double get spacingXL => 32.0.h;
   static double get spacingXXL => 48.0.h;
-  
+
   // Standardized Border Radius
   static double get radiusS => 5.0.r;
   static double get radiusM => 10.0.r;
   static double get radiusL => 15.0.r;
   static double get radiusXL => 20.0.r;
-  
+
   // Standardized Card Styling
   static BoxDecoration get cardDecoration => BoxDecoration(
     color: cardBackground.withOpacity(0.7),
     border: Border.all(color: borderGold, width: 1.0.w),
     borderRadius: BorderRadius.circular(radiusM),
   );
-  
+
   static BoxDecoration get cardDecorationTransparent => BoxDecoration(
     color: cardBackground.withOpacity(0.7),
     border: Border.all(color: borderGold, width: 1.0.w),
     borderRadius: BorderRadius.circular(radiusM),
   );
-  
+
   // Standardized Button Styling
   static BoxDecoration get buttonDecoration => BoxDecoration(
     border: Border.all(color: borderGold, width: 1.0.w),
     borderRadius: BorderRadius.circular(radiusS),
   );
-  
+
   static BoxDecoration get buttonDecorationFilled => BoxDecoration(
     color: primaryGold.withOpacity(0.1),
     border: Border.all(color: borderGold, width: 1.0.w),
@@ -98,7 +100,7 @@ class CustomTheme {
         color: textGold,
         letterSpacing: 1.0.w,
       ),
-      
+
       // Headline styles for section titles
       headlineLarge: TextStyle(
         fontFamily: 'PlayfairDisplaySC',
@@ -121,7 +123,7 @@ class CustomTheme {
         color: textGold,
         letterSpacing: 0.8.w,
       ),
-      
+
       // Title styles for card titles
       titleLarge: TextStyle(
         fontFamily: 'PlayfairDisplaySC',
@@ -144,7 +146,7 @@ class CustomTheme {
         color: textGold,
         letterSpacing: 5.0.w,
       ),
-      
+
       // Body styles for content
       bodyLarge: TextStyle(
         fontFamily: 'PlayfairDisplay',
@@ -164,7 +166,7 @@ class CustomTheme {
         fontWeight: FontWeight.normal,
         color: textSecondary,
       ),
-      
+
       // Label styles for buttons and small text
       labelLarge: TextStyle(
         fontFamily: 'PlayfairDisplaySC',
@@ -197,10 +199,7 @@ class CustomTheme {
     elevation: 0,
     centerTitle: true,
     titleTextStyle: textTheme.headlineMedium,
-    iconTheme: IconThemeData(
-      color: textGold,
-      size: 24.0.w,
-    ),
+    iconTheme: IconThemeData(color: textGold, size: 24.0.w),
     leadingWidth: 60.0.w,
   );
 
@@ -224,10 +223,7 @@ class CustomTheme {
       ),
       appBarTheme: appBarTheme,
       textTheme: textTheme,
-      dividerTheme: const DividerThemeData(
-        color: borderGold,
-        thickness: 1,
-      ),
+      dividerTheme: const DividerThemeData(color: borderGold, thickness: 1),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: primaryGold,
@@ -275,9 +271,7 @@ class CustomTheme {
           borderRadius: BorderRadius.circular(radiusM),
           borderSide: const BorderSide(color: primaryGold, width: 2),
         ),
-        hintStyle: textTheme.bodyMedium?.copyWith(
-          color: textSecondary,
-        ),
+        hintStyle: textTheme.bodyMedium?.copyWith(color: textSecondary),
       ),
     );
   }
@@ -287,10 +281,7 @@ class CustomTheme {
     return BoxDecoration(
       color: cardBackground.withOpacity(0.7),
       borderRadius: BorderRadius.circular(borderRadius),
-      border: Border.all(
-        color: borderGold,
-        width: 1.0.w,
-      ),
+      border: Border.all(color: borderGold, width: 1.0.w),
     );
   }
 
@@ -309,7 +300,7 @@ class CustomTheme {
       border: Border.all(color: errorColor, width: 1.0.w),
     );
   }
-  
+
   static BoxDecoration warningStatusDecoration() {
     return BoxDecoration(
       color: warningColor.withOpacity(0.2),

@@ -1,45 +1,45 @@
 {
   "project_info": {
-    "project_number": "784560926437",
-    "project_id": "emerald-ai-b49af",
-    "storage_bucket": "emerald-ai-b49af.firebasestorage.app"
+    "project_number": "275145323529",
+    "project_id": "emerald-tasks",
+    "storage_bucket": "emerald-tasks.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:784560926437:android:5a80eeee3ff09aafdc2e0c",
+        "mobilesdk_app_id": "1:275145323529:android:c7b432ee898fa0e46d74d8",
         "android_client_info": {
           "package_name": "com.example.emerald_tasks"
         }
       },
       "oauth_client": [
         {
-          "client_id": "784560926437-tpi9ahkvpvb03vbm9matanh62r7s4gfb.apps.googleusercontent.com",
+          "client_id": "275145323529-o53867d4v48pef2h1utp2gfcqpdh9evq.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.emerald_tasks",
-            "certificate_hash": "5f318081d28212d19acbb5db01406550ab94a18c"
+            "certificate_hash": "07b62212f24b1cb9f2d1cc4159da7612a3a7626e"
           }
         },
         {
-          "client_id": "784560926437-ea79c4k6d9mr5lrtchf25ht6p1p66j8n.apps.googleusercontent.com",
+          "client_id": "275145323529-ld9kunsgdtht66jjighi57jt30bd261v.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCbx9wvwsL6M4x5c4SJJhyPfCUSoUzFYBw"
+          "current_key": "AIzaSyDl5NzhNreeiQVbCAGrw87aEd_mFfWI5p0"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "784560926437-ea79c4k6d9mr5lrtchf25ht6p1p66j8n.apps.googleusercontent.com",
+              "client_id": "275145323529-ld9kunsgdtht66jjighi57jt30bd261v.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "784560926437-mto7e659srqq22sceop5sq53cenknlso.apps.googleusercontent.com",
+              "client_id": "275145323529-8tt90uesrhu48eh65rnjt5s921ahfhan.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
                 "bundle_id": "com.example.emeraldTasks"

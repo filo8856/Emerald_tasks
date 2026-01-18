@@ -1,5 +1,7 @@
 import 'package:emerald_tasks/Screens/Constants/custom_theme.dart';
 import 'package:emerald_tasks/Screens/chat.dart/task_input.dart';
+import 'package:emerald_tasks/models/createEventsInCalendar.dart';
+import 'package:emerald_tasks/models/task.dart';
 import 'package:flutter/material.dart';
 import '../Auth.dart';
 
@@ -11,17 +13,23 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-
   void handleGoogleSignIn() async {
     final result = await AuthService().signInWithGoogle();
 
     if (result != null) {
       final user = result["user"];
-      final token = result["token"];
+      //final token = result["token"];
+      token = result["token"];
+      // final Task testTask = Task(
+      //   title: "Test Calendar Event",
+      //   additionalDetails: "Testing Google Calendar API integration",
+      //   deadline: DateTime.now().add(const Duration(hours: 2)),
+      //   effortMinutes: 30,
+      //   priority: TaskPriority.medium,
+      // );
+      // final List<Task> testTasks = [testTask];
 
-      print("Logged in as: ${user.email}");
-      print("Access token: $token");
-
+      // await createCalendarEvents(token, testTasks);
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => TaskInputScreen()),
@@ -45,7 +53,7 @@ class _LoginState extends State<Login> {
             Text(
               "Welcome",
               style: TextStyle(
-                fontSize: 0.04*h,
+                fontSize: 0.04 * h,
                 fontWeight: FontWeight.bold,
                 color: CustomTheme.primaryColor,
               ),
@@ -55,10 +63,7 @@ class _LoginState extends State<Login> {
 
             const Text(
               "Sign In to Continue",
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey,
-              ),
+              style: TextStyle(fontSize: 16, color: Colors.grey),
             ),
 
             const Spacer(),
@@ -84,7 +89,6 @@ class _LoginState extends State<Login> {
             //     ),
             //   ),
             // )
-
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
               child: SizedBox(
@@ -111,7 +115,7 @@ class _LoginState extends State<Login> {
                   ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
